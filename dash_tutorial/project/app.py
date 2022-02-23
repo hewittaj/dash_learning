@@ -1,24 +1,23 @@
 import dash
-import dash_html_components as html
-import dash_core_components as dcc
+from dash import dcc, html, Input, Output
+import dash_bootstrap_components as dbc
+import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-import dash_bootstrap_components as dbc
-from dash import Input, Output
+
 
 app = dash.Dash(external_stylesheets=[dbc.themes.SIMPLEX])
 
 # the style arguments for the sidebar. We use position:fixed and a fixed width
-SIDEBAR_STYLE = {
-    "position": "fixed",
-    "top": 0,
-    "left": 0,
-    "bottom": 0,
-    "width": "16rem",
-    "padding": "2rem 1rem",
-    "background-color": "#f8f9fa",
-    "$nav-pill": "blue"
-}
+# SIDEBAR_STYLE = {
+#     "position": "fixed",
+#     "top": 0,
+#     "left": 0,
+#     "bottom": 0,
+#     "width": "16rem",
+#     "padding": "2rem 1rem",
+#     "background-color": "#f8f9fa",
+# }
 
 # the styles for the main content position it to the right of the sidebar and
 # add some padding.
@@ -30,22 +29,23 @@ CONTENT_STYLE = {
 
 sidebar = html.Div(
     [
-        html.H2("Sidebar", className="display-4"),
-        html.Hr(),
-        html.P(
-            "A simple sidebar layout with navigation links", className="lead"
-        ),
         dbc.Nav(
             [
                 dbc.NavLink("Home", href="/", active="exact"),
                 dbc.NavLink("Page 1", href="/page-1", active="exact"),
                 dbc.NavLink("Page 2", href="/page-2", active="exact"),
+                dbc.NavLink("3d figure", href="3d-figure", active="exact")
             ],
-            vertical=True,
             pills=True,
         ),
+        html.H2("Sidebar", className="display-4"),
+        html.Hr(),
+        html.P(
+            "A simple sidebar layout with navigation links", className="lead"
+        ),
+        
     ],
-    style=SIDEBAR_STYLE,
+    # style=SIDEBAR_STYLE,
 )
 
 content = html.Div(id="page-content", style=CONTENT_STYLE)
@@ -60,6 +60,7 @@ def render_page_content(pathname):
         return html.P("This is the content of page 1. Yay!")
     elif pathname == "/page-2":
         return html.P("Oh cool, this is page 2!")
+
     # If the user tries to reach a different page, return a 404 message
     return dbc.Container(
         [
